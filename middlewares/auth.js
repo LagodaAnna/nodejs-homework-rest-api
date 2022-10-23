@@ -15,10 +15,11 @@ const auth = async (req, res, next) => {
     const { id } = jwt.verify(token, SECRET_KEY);
     const user = await User.findById(id);
     req.user = user;
-    console.log(user);
-    if (!user || !token || user.token !== token) {
+
+    if (!user || user.token !== token) {
       throw new Unauthorized();
     }
+   
     next();
   } catch (error) {
     if (!error.status) {

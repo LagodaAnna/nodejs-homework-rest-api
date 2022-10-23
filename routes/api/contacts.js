@@ -1,21 +1,22 @@
 const express = require('express');
 const { contacts: ctrl } = require('../../controllers');
-const { validation, ctrlWrapper } = require('../../middlewares');
+const { validation, ctrlWrapper, auth } = require('../../middlewares');
 const { schemas } = require('../../models/contact');
 const router = express.Router();
 
-router.get('/', ctrlWrapper(ctrl.listContacts));
+router.get('/', auth, ctrlWrapper(ctrl.listContacts));
 
-router.get('/:contactId', ctrlWrapper(ctrl.getContactById));
+router.get('/:contactId', auth, ctrlWrapper(ctrl.getContactById));
 
-router.post('/', validation(schemas.addJoiSchema), ctrlWrapper(ctrl.addContact));
+router.post('/', auth, validation(schemas.addJoiSchema), ctrlWrapper(ctrl.addContact));
 
-router.delete('/:contactId', ctrlWrapper(ctrl.removeContact));
+router.delete('/:contactId', auth, ctrlWrapper(ctrl.removeContact));
 
-router.put('/:contactId', validation(schemas.addJoiSchema), ctrlWrapper(ctrl.updateContact));
+router.put('/:contactId', auth, validation(schemas.addJoiSchema), ctrlWrapper(ctrl.updateContact));
 
 router.patch(
   '/:contactId/favorite',
+  auth,
   validation(schemas.updateFavoriteJoiSchema),
   ctrlWrapper(ctrl.updateStatusContact),
 );
